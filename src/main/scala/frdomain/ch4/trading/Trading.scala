@@ -1,8 +1,8 @@
 package frdomain.ch4
 package trading
 
-import scalaz._
-import Scalaz._
+import cats.data.Kleisli
+
 
 trait Trading[Account, Trade, ClientOrder, Order, Execution, Market] {
 

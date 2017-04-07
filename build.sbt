@@ -12,6 +12,7 @@ lazy val commonSettings = Seq(
   libraryDependencies ++= Seq(
       "org.scalaz"                   %% "scalaz-core"                   % "7.2.7",
       "org.scalaz"                   %% "scalaz-concurrent"             % "7.2.7",
+      "org.typelevel"                %% "cats"                          % "0.9.0",
       "joda-time"                     % "joda-time"                     % "2.9.1",
       "org.joda"                      % "joda-convert"                  % "1.8.1",
       "io.spray"                     %% "spray-json"                    % "1.3.2",

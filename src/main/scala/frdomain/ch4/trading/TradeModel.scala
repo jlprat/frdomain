@@ -1,10 +1,7 @@
 package frdomain.ch4
 package trading
 
-import java.util.{ Date, Calendar }
-
-import scalaz._
-import Scalaz._
+import java.util.Date
 
 trait TradeModel {this: RefModel =>
 

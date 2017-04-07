@@ -2,9 +2,7 @@ package frdomain.ch4
 package solns
 
 import java.util.{ Date, Calendar }
-import util.{ Try, Success, Failure }
-import scalaz._
-import Scalaz._
+import cats.implicits._
 
 /**
  *
@@ -42,26 +40,26 @@ object FailfastValidation {
   object Account {
   
     // validation functions : each returns a \/[String, _]
-    private def validateAccountNo(no: String): String \/ String = 
+    private def validateAccountNo(no: String): Either[String, String] =
       if (no.isEmpty || no.size < 10) 
-        s"Account No has to be at least 10 characters long: found $no".left
-      else no.right
+        s"Account No has to be at least 10 characters long: found $no".asLeft
+      else no.asRight
   
-    private def validateOpenCloseDate(od: Date, cd: Option[Date]): String \/ (Option[Date], Option[Date]) = cd.map { c => 
+    private def validateOpenCloseDate(od: Date, cd: Option[Date]): Either[String, (Option[Date], Option[Date])] = cd.map { c =>
       if (c before od) 
-        s"Close date [$c] cannot be earlier than open date [$od]".left
-      else (od.some, cd).right
-    }.getOrElse { (od.some, cd).right }
+        s"Close date [$c] cannot be earlier than open date [$od]".asLeft
+      else (od.some, cd).asRight
+    }.getOrElse { (od.some, cd).asRight }
   
-    private def validateRate(rate: BigDecimal): String \/ BigDecimal =
-      if (rate <= BigDecimal(0)) s"Interest rate $rate must be > 0".left
-      else rate.right
+    private def validateRate(rate: BigDecimal): Either[String, BigDecimal] =
+      if (rate <= BigDecimal(0)) s"Interest rate $rate must be > 0".asLeft
+      else rate.asRight
   
     // the validations are invoked monadically
     // E \/ A in scalaz defines a Monad by virtue of which the function
     // stops on encountering the first failure
     def savingsAccount(no: String, name: String, rate: BigDecimal, openDate: Option[Date], 
-      closeDate: Option[Date], balance: Balance): String \/ Account = { 
+      closeDate: Option[Date], balance: Balance): Either[String, Account] = {
   
       val od = openDate.getOrElse(today)
 

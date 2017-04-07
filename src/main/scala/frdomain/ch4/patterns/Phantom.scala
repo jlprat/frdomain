@@ -2,12 +2,13 @@ package frdomain.ch4
 package patterns
 
 import scala.language.higherKinds
-import java.util.{ Date, Calendar }
+import java.util.{Calendar, Date}
+
 
 object Loans {
 
-  import scalaz._
-  import Scalaz._
+  import cats.data.Kleisli
+  import cats.implicits._
 
   val today = Calendar.getInstance.getTime
 
@@ -35,7 +36,7 @@ object Loans {
   def applyLoan(name: String, purpose: String, repayIn: Int, date: Date = today) =
     LoanApplication[Applied](date, name, purpose, repayIn)
 
-  def approve = Kleisli[Option, LoanApplied, LoanApproved] { l => 
+  def approve = Kleisli[Option, LoanApplied, LoanApproved] { l: LoanApplied =>
     l.copy(
       loanNo = scala.util.Random.nextString(10).some,
       actualRepaymentYears = 15.some,

@@ -2,12 +2,13 @@ package frdomain.ch3
 package solns
 
 import java.util.Date
-import util.{ Try, Success, Failure }
+
+import cats.data.Reader
+
+import util.{Failure, Success, Try}
 import repository._
 import common._
 
-import scalaz._
-import Scalaz._
 
 /**
  * Exercise 3.3 (variant):  Injecting multiple dependencies
@@ -61,7 +62,7 @@ object MultiInjectionExtra {
         case Failure(ex) => Failure(new Exception(s"Failed to open account $no: $name", ex))
       }
   
-    // Needs only AccountRepository to be inejcted
+    // Needs only AccountRepository to be injected
     def close(no: String, closeDate: Option[Date]) = Reader { (repo: AccountRepository) => 
       repo.query(no) match {
         case Success(Some(a)) =>
@@ -73,7 +74,7 @@ object MultiInjectionExtra {
       }
     }
   
-    // Needs only AccountRepository to be inejcted
+    // Needs only AccountRepository to be injected
     def debit(no: String, amount: Amount) = Reader { (repo: AccountRepository) =>
       repo.query(no) match {
         case Success(Some(a)) =>
@@ -84,7 +85,7 @@ object MultiInjectionExtra {
       }
     }
   
-    // Needs only AccountRepository to be inejcted
+    // Needs only AccountRepository to be injected
     def credit(no: String, amount: Amount) = Reader { (repo: AccountRepository) =>
       repo.query(no) match {
         case Success(Some(a)) => repo.store(a.copy(balance = Balance(a.balance.amount + amount)))
@@ -93,7 +94,7 @@ object MultiInjectionExtra {
       }
     }
   
-    // Needs only AccountRepository to be inejcted
+    // Needs only AccountRepository to be injected
     def balance(no: String) = Reader((repo: AccountRepository) => repo.balance(no))
 
     // A sample workflow composite method that needs to compose over multiple
